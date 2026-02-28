@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 # Replace this with your actual API key from OpenWeatherMap
-API_KEY = "91b6ad22996f45c3913cfffd79178a85"
+API_KEY = "XXXX" 
 
 @app.route('/weather')
 def get_weather():
