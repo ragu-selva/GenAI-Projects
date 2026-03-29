@@ -1,0 +1,430 @@
+/* ═══════════════════════════════════════════════════════════════
+   Basel III RAG Advisor — Financial Dark Theme
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ── Root Variables ─────────────────────────────────────────────── */
+:root {
+  --bg-deep:        #0a0d14;
+  --bg-card:        #111520;
+  --bg-raised:      #161b2a;
+  --bg-hover:       #1e2538;
+  --border:         #1e2b45;
+  --border-bright:  #2d4070;
+  --gold:           #c9a84c;
+  --gold-light:     #e8c96b;
+  --gold-dim:       #7a6030;
+  --blue-accent:    #3b82f6;
+  --blue-dim:       #1e3a5f;
+  --text-primary:   #e8edf5;
+  --text-secondary: #8899b4;
+  --text-muted:     #4a5a75;
+  --success:        #22c55e;
+  --warning:        #f59e0b;
+  --danger:         #ef4444;
+  --font-main:      'IBM Plex Sans', sans-serif;
+  --font-mono:      'IBM Plex Mono', monospace;
+}
+
+/* ── Global Reset ───────────────────────────────────────────────── */
+html, body, .stApp {
+  background-color: var(--bg-deep) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-main) !important;
+}
+
+/* Hide Streamlit chrome */
+#MainMenu, footer, header { display: none !important; }
+.stDeployButton { display: none !important; }
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.header-container {
+  text-align: center;
+  padding: 2.5rem 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.header-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  padding: 0.3rem 1rem;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+}
+
+.main-title {
+  font-family: var(--font-main) !important;
+  font-size: 2.4rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 !important;
+  line-height: 1.1 !important;
+}
+
+.subtitle {
+  color: var(--text-secondary) !important;
+  font-size: 0.95rem !important;
+  font-weight: 300;
+  margin: 0 !important;
+}
+
+/* ── Status Banners ─────────────────────────────────────────────── */
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.2rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+}
+.status-banner.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--warning);
+}
+.status-banner.success {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: var(--success);
+}
+
+/* ── Empty State ────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+}
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+.empty-body { font-size: 0.9rem; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+
+/* ── Chat Messages ──────────────────────────────────────────────── */
+.chat-message {
+  display: flex;
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
+  align-items: flex-start;
+}
+
+.message-avatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.user-avatar {
+  background: var(--blue-dim);
+  color: var(--blue-accent);
+  border: 1px solid var(--blue-accent);
+}
+
+.assistant-avatar {
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+}
+
+.user-message { flex-direction: row-reverse; }
+
+.message-bubble {
+  max-width: 85%;
+  padding: 1rem 1.2rem;
+  border-radius: 4px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.user-bubble {
+  background: var(--blue-dim);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--text-primary);
+}
+
+.assistant-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  flex-grow: 1;
+}
+
+.meta-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  margin-bottom: 0.6rem;
+}
+
+.message-content p { margin: 0 0 0.75rem; }
+.message-content p:last-child { margin-bottom: 0; }
+
+.source-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.src-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+/* ── Sources Panel ──────────────────────────────────────────────── */
+.sources-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.sources-icon { font-size: 1.1rem; }
+
+.sources-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.sources-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+}
+
+.source-snippet {
+  padding: 0.5rem 0;
+}
+.source-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+.source-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-family: var(--font-mono);
+  background: var(--bg-raised);
+  padding: 0.6rem 0.75rem;
+  border-radius: 3px;
+  border-left: 2px solid var(--gold-dim);
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+  background-color: var(--bg-card) !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+[data-testid="stSidebar"] .stMarkdown,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p {
+  color: var(--text-secondary) !important;
+  font-family: var(--font-main) !important;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+}
+.sidebar-logo-icon { font-size: 1.4rem; }
+.sidebar-logo-text {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold) !important;
+  letter-spacing: 0.05em;
+}
+
+/* Stats box */
+.stats-box {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+}
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.stat-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  font-family: var(--font-mono);
+}
+
+/* ── Streamlit Overrides ─────────────────────────────────────────── */
+/* Input */
+.stTextInput input,
+.stTextArea textarea {
+  background: var(--bg-raised) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-mono) !important;
+  border-radius: 4px !important;
+}
+
+.stTextInput input:focus,
+.stTextArea textarea:focus {
+  border-color: var(--gold-dim) !important;
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.1) !important;
+}
+
+/* Buttons */
+.stButton button {
+  background: var(--bg-raised) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.78rem !important;
+  border-radius: 3px !important;
+  transition: all 0.15s ease !important;
+}
+
+.stButton button:hover {
+  border-color: var(--gold-dim) !important;
+  color: var(--gold) !important;
+  background: rgba(201, 168, 76, 0.06) !important;
+}
+
+.stButton button[kind="primary"] {
+  background: rgba(201, 168, 76, 0.12) !important;
+  border-color: var(--gold-dim) !important;
+  color: var(--gold) !important;
+}
+
+/* Selectbox */
+.stSelectbox > div > div {
+  background: var(--bg-raised) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Slider */
+.stSlider .stSlider div[data-baseweb="slider"] {
+  background: var(--border) !important;
+}
+
+/* Expander */
+.streamlit-expanderHeader {
+  background: var(--bg-raised) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.78rem !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 3px !important;
+}
+
+.streamlit-expanderContent {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-top: none !important;
+}
+
+/* Info / success / warning boxes */
+.stAlert {
+  border-radius: 3px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.8rem !important;
+}
+
+/* Spinner */
+.stSpinner > div {
+  border-top-color: var(--gold) !important;
+}
+
+/* Chat input */
+.stChatInput {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+}
+
+.stChatInput textarea {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-main) !important;
+}
+
+/* File uploader */
+[data-testid="stFileUploader"] {
+  background: var(--bg-raised) !important;
+  border: 1px dashed var(--border-bright) !important;
+  border-radius: 4px !important;
+}
+
+/* Divider */
+hr {
+  border-color: var(--border) !important;
+  margin: 0.75rem 0 !important;
+}
+
+/* Column layout gaps */
+[data-testid="column"] {
+  padding: 0 0.75rem !important;
+}
