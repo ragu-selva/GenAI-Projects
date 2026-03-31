@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #05080f;
+  font-family: 'Courier New', monospace;
+  color: #c8ddf0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.container { max-width: 900px; margin: 0 auto; padding: 20px 16px 32px; }
+
+/* Phase header */
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0 10px;
+}
+.phase-badge {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.phase-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+.phase-line {
+  flex: 1;
+  height: 1px;
+  background: #1a3050;
+}
+
+/* Step card */
+.step {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-body {
+  flex: 1;
+  background: #080d18;
+  border: 1px solid #1a3050;
+  border-radius: 8px;
+  padding: 11px 14px;
+}
+.step-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e0f0ff;
+  margin-bottom: 5px;
+}
+.step-detail {
+  font-size: 11px;
+  color: #5a7a9a;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.step-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  margin-top: 5px;
+}
+.actor {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.arrow-line {
+  flex: none;
+  font-size: 13px;
+  color: #2a4060;
+}
+.arrow-label {
+  font-size: 10px;
+  color: #4a7a9a;
+  font-style: italic;
+}
+
+/* Actor colours */
+.a-pdf      { background:#f43f5e18; color:#f43f5e; border:1px solid #f43f5e40; }
+.a-chunker  { background:#fb923c18; color:#fb923c; border:1px solid #fb923c40; }
+.a-claude   { background:#f5a62318; color:#f5a623; border:1px solid #f5a62340; }
+.a-nx       { background:#10b98118; color:#10b981; border:1px solid #10b98140; }
+.a-neo4j    { background:#018bff18; color:#018bff; border:1px solid #018bff40; }
+.a-embed    { background:#7c3aed18; color:#a78bfa; border:1px solid #7c3aed40; }
+.a-memory   { background:#64748b18; color:#94a3b8; border:1px solid #64748b40; }
+.a-user     { background:#fbbf2418; color:#fbbf24; border:1px solid #fbbf2440; }
+
+/* Correction box */
+.correction {
+  background: #1a0a0a;
+  border: 1px solid #f43f5e40;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0 4px 42px;
+  font-size: 11px;
+  color: #f43f5e;
+  line-height: 1.6;
+}
+.correction strong { color: #ff6b6b; }
+
+/* Connector line between steps */
+.connector {
+  width: 1px;
+  background: #1a3050;
+  height: 8px;
+  margin-left: 13px;
+}
+
+/* Summary box */
+.summary {
+  margin: 24px 0 0 0;
+  background: #080d18;
+  border: 1px solid #1a3050;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.summary-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #4a7a9a;
+  margin-bottom: 12px;
+}
+.summary-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 7px;
+  font-size: 11px;
+}
+.summary-row .icon { flex-shrink: 0; }
+.summary-row .text { color: #8aaabb; line-height: 1.5; }
+.summary-row .text strong { color: #c8ddf0; }
+
+/* Title */
+.title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+.subtitle { font-size: 11px; color: #4a7a9a; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="title">KG-RAG · Step-by-Step Sequence</div>
+  <div class="subtitle">Two phases: Ingestion (once) + Query (every question)</div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE A — INGESTION -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge" style="background:#f43f5e18;color:#f43f5e;border:1px solid #f43f5e40">Phase A</span>
+    <span class="phase-label">Ingestion — runs ONCE when you upload the PDF</span>
+    <div class="phase-line"></div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-num" style="background:#f43f5e20;color:#f43f5e;border:1px solid #f43f5e40">1</div>
+    <div class="step-body">
+      <div class="step-title">PDF Text Extraction</div>
+      <div class="step-detail">PyPDF reads the uploaded PDF page by page and extracts raw text from each page.</div>
+      <div class="step-arrow">
+        <span class="actor a-user">You (PDF)</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-pdf">PyPDF</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">Raw text per page</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 2 -->
+  <div class="step">
+    <div class="step-num" style="background:#fb923c20;color:#fb923c;border:1px solid #fb923c40">2</div>
+    <div class="step-body">
+      <div class="step-title">Chunking</div>
+      <div class="step-detail">Text is split into overlapping windows of ~400 words (configurable). Each chunk keeps metadata: chunk_id, page_number, preview text. Overlap of 60 words prevents context being cut at chunk boundaries.</div>
+      <div class="step-arrow">
+        <span class="actor a-pdf">Raw text</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-chunker">Chunker</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">chunks[ ] — list of {id, page, text}</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 3 -->
+  <div class="step">
+    <div class="step-num" style="background:#f5a62320;color:#f5a623;border:1px solid #f5a62340">3</div>
+    <div class="step-body">
+      <div class="step-title">Entity + Relation Extraction  <span style="font-size:10px;color:#5a7a9a">(one Claude Haiku call per chunk)</span></div>
+      <div class="step-detail">For each chunk, Claude Haiku is prompted to extract structured JSON with entities (id, label, type, description) and relationships (from, to, type, description). This runs in a loop — 1 API call per chunk.</div>
+      <div class="step-arrow">
+        <span class="actor a-chunker">Each chunk text</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-claude">Claude Haiku</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">{ entities: [ ], relationships: [ ] }</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 4 -->
+  <div class="step">
+    <div class="step-num" style="background:#10b98120;color:#10b981;border:1px solid #10b98140">4</div>
+    <div class="step-body">
+      <div class="step-title">Graph Construction — NetworkX + Neo4j</div>
+      <div class="step-detail">Each extracted entity becomes a node. Each relationship becomes a directed edge. Nodes store the chunk_ids they came from — this is the bridge between the graph and the vector store. Both NetworkX (in-memory) and Neo4j (if connected) are updated simultaneously.</div>
+      <div class="step-arrow">
+        <span class="actor a-claude">entities + rels</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-nx">NetworkX DiGraph</span>
+        <span class="arrow-line" style="color:#018bff">+ ──►</span>
+        <span class="actor a-neo4j">Neo4j (MERGE nodes/edges)</span>
+      </div>
+      <div style="margin-top:8px;padding:8px 10px;background:#0d1825;border-radius:5px;font-size:10px;color:#5a7a9a;line-height:1.6">
+        Node properties stored: <span style="color:#10b981">label, type, description, chunk_ids[ ]</span><br>
+        Edge properties stored: <span style="color:#10b981">type (e.g. DEFINES, GOVERNS), description</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 5 — CORRECTION HIGHLIGHT -->
+  <div class="step">
+    <div class="step-num" style="background:#7c3aed20;color:#a78bfa;border:1px solid #7c3aed40">5</div>
+    <div class="step-body">
+      <div class="step-title">Chunk Embedding  <span style="font-size:10px;color:#a78bfa">← your understanding had a small gap here</span></div>
+      <div class="step-detail">The RAW TEXT CHUNKS (not the graph) are embedded using sentence-transformers (all-MiniLM-L6-v2, runs locally, no API key). Each chunk becomes a 384-dimensional float vector. All vectors are stored in a Python list in memory (numpy arrays).</div>
+      <div class="step-arrow">
+        <span class="actor a-chunker">chunks[ ] text</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-embed">sentence-transformers</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">embeddings[ ] — list of 384-dim vectors</span>
+      </div>
+    </div>
+  </div>
+  <div class="correction">
+    ⚠️ <strong>Correction to your understanding:</strong> The <strong>Knowledge Graph is NOT embedded</strong>. Only the text chunks are. The graph is kept as a separate structure (NetworkX + Neo4j). The connection between graph and vectors is the <strong>chunk_ids</strong> property stored on each graph node.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE B — QUERY -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header" style="margin-top:32px">
+    <span class="phase-badge" style="background:#4a9eff18;color:#4a9eff;border:1px solid #4a9eff40">Phase B</span>
+    <span class="phase-label">Query — runs every time you ask a question</span>
+    <div class="phase-line"></div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step">
+    <div class="step-num" style="background:#fbbf2420;color:#fbbf24;border:1px solid #fbbf2440">6</div>
+    <div class="step-body">
+      <div class="step-title">Query Embedding</div>
+      <div class="step-detail">Your question is embedded using the same sentence-transformer model, producing a 384-dim vector. Must use the same model as Step 5 so vector spaces match.</div>
+      <div class="step-arrow">
+        <span class="actor a-user">"What is the LTV threshold?"</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-embed">sentence-transformers</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">query_vector [384-dim]</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 7 -->
+  <div class="step">
+    <div class="step-num" style="background:#fbbf2420;color:#fbbf24;border:1px solid #fbbf2440">7</div>
+    <div class="step-body">
+      <div class="step-title">Cosine Similarity → Top-K Chunks</div>
+      <div class="step-detail">Cosine similarity is computed between the query vector and every chunk embedding. Chunks are ranked by score. Top-3 (configurable) are returned with their page number and score. This is pure numpy — no external vector database needed.</div>
+      <div class="step-arrow">
+        <span class="actor a-memory">query_vector vs embeddings[ ]</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">top-3 chunks with scores</span>
+      </div>
+      <div style="margin-top:8px;padding:8px 10px;background:#0d1825;border-radius:5px;font-size:10px;color:#5a7a9a;line-height:1.6">
+        Formula: <span style="color:#fbbf24">cosine(q, c) = (q · c) / (|q| × |c|)</span><br>
+        Returns: <span style="color:#fbbf24">chunk text + page_number + similarity score (0–1)</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 8 -->
+  <div class="step">
+    <div class="step-num" style="background:#fbbf2420;color:#fbbf24;border:1px solid #fbbf2440">8</div>
+    <div class="step-body">
+      <div class="step-title">Graph Context Lookup  <span style="font-size:10px;color:#5a7a9a">(this is the KG part of KG-RAG)</span></div>
+      <div class="step-detail">Using the chunk_ids from the top-k chunks, the system walks the NetworkX graph and finds all nodes whose chunk_ids overlap. For each matched node, it also retrieves its outgoing edges (relationships). This builds a structured text summary of the relevant graph neighbourhood.</div>
+      <div class="step-arrow">
+        <span class="actor a-memory">top-k chunk_ids</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-nx">NetworkX lookup</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-memory">graph_context (text summary)</span>
+      </div>
+      <div style="margin-top:8px;padding:8px 10px;background:#0d1825;border-radius:5px;font-size:10px;color:#5a7a9a;line-height:1.7">
+        Example graph_context output:<br>
+        <span style="color:#10b981">• [Rule] LTV Threshold: defines loan-to-value ratio limits<br>
+        &nbsp;&nbsp;→ APPLIES_TO → Residential Mortgage<br>
+        • [Concept] Risk Weight: capital charge percentage<br>
+        &nbsp;&nbsp;→ GOVERNED_BY → ERBA Rule §IV.A.2.c</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 9 -->
+  <div class="step">
+    <div class="step-num" style="background:#fbbf2420;color:#fbbf24;border:1px solid #fbbf2440">9</div>
+    <div class="step-body">
+      <div class="step-title">Context Assembly</div>
+      <div class="step-detail">All retrieved information is assembled into a single prompt context: graph context (structured entities + relations) + top-k chunk texts (with page numbers) + the original user question.</div>
+      <div style="margin-top:8px;padding:8px 10px;background:#0d1825;border-radius:5px;font-size:10px;color:#5a7a9a;line-height:1.7">
+        <span style="color:#c8ddf0">Prompt structure:</span><br>
+        <span style="color:#10b981">[Graph Context]</span> ← entities + relations<br>
+        <span style="color:#4a9eff">[Page 4, score=0.92] chunk text…</span><br>
+        <span style="color:#4a9eff">[Page 7, score=0.87] chunk text…</span><br>
+        <span style="color:#4a9eff">[Page 2, score=0.81] chunk text…</span><br>
+        <span style="color:#fbbf24">Question: What is the LTV threshold?</span>
+      </div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- Step 10 -->
+  <div class="step">
+    <div class="step-num" style="background:#f5a62320;color:#f5a623;border:1px solid #f5a62340">10</div>
+    <div class="step-body">
+      <div class="step-title">Answer Generation — Claude Haiku</div>
+      <div class="step-detail">Claude Haiku receives the full assembled context and generates a grounded answer with page citations. The system prompt instructs it to only use information from the provided context and to cite page numbers.</div>
+      <div class="step-arrow">
+        <span class="actor a-memory">assembled context + question</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-claude">Claude Haiku</span>
+        <span class="arrow-line">──►</span>
+        <span class="actor a-user">Cited answer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <div class="summary-title">Your Understanding — Final Validated Summary</div>
+
+    <div class="summary-row">
+      <span class="icon">✅</span>
+      <span class="text"><strong>Claude Haiku extracts entities + relations</strong> — correct. One API call per chunk during ingestion.</span>
+    </div>
+    <div class="summary-row">
+      <span class="icon">✅</span>
+      <span class="text"><strong>Stored in NetworkX AND Neo4j</strong> — correct. Both updated simultaneously. NetworkX for fast in-memory traversal; Neo4j for persistence and Cypher queries.</span>
+    </div>
+    <div class="summary-row">
+      <span class="icon">❌→✅</span>
+      <span class="text"><strong>"Entire graph is embedded"</strong> — not quite. Only the <strong>raw text chunks</strong> are embedded (384-dim vectors, stored as numpy arrays in memory). The graph stays as nodes/edges. They link via <strong>chunk_ids</strong>.</span>
+    </div>
+    <div class="summary-row">
+      <span class="icon">✅</span>
+      <span class="text"><strong>Query is embedded → cosine similarity → top-k chunks</strong> — exactly correct.</span>
+    </div>
+    <div class="summary-row">
+      <span class="icon">✅+</span>
+      <span class="text"><strong>Retrieved context + query → Claude Haiku → answer</strong> — correct. Plus graph context (entities + relations linked to top-k chunks) is also injected, which is what makes this KG-RAG rather than plain RAG.</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

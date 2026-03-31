@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #05080f; font-family: 'Courier New', monospace; color: #c8ddf0; padding: 20px; }
+
+.title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+.subtitle { font-size: 11px; color: #4a7a9a; margin-bottom: 24px; }
+
+/* Flow row */
+.flow { display: flex; align-items: flex-start; gap: 0; margin-bottom: 24px; flex-wrap: wrap; }
+.box {
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-width: 150px;
+  max-width: 200px;
+  flex: 1;
+}
+.box-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+.box-body  { font-size: 10px; color: #5a7a9a; line-height: 1.5; }
+.arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 18px;
+  color: #2a4060;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+/* Section */
+.section { margin-bottom: 20px; }
+.sec-label {
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: #4a7a9a; margin-bottom: 10px;
+}
+
+/* Two column grid */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+
+/* Entity / rel cards */
+.entity-card {
+  background: #080d18;
+  border: 1px solid #1a3050;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.entity-card .eid   { font-size: 9px; color: #4a7a9a; margin-bottom: 3px; }
+.entity-card .elabel { font-size: 12px; font-weight: 700; color: #e0f0ff; margin-bottom: 2px; }
+.entity-card .etype { font-size: 9px; padding: 1px 6px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+.entity-card .edesc { font-size: 10px; color: #5a7a9a; line-height: 1.4; }
+
+.rel-card {
+  background: #080d18;
+  border: 1px solid #1a3050;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rel-from { font-size: 10px; color: #4a9eff; font-weight: 700; }
+.rel-type { font-size: 9px; color: #10b981; background: #10b98118; border: 1px solid #10b98140; padding: 2px 6px; border-radius: 3px; }
+.rel-to   { font-size: 10px; color: #f5a623; font-weight: 700; }
+.rel-arrow { color: #2a4060; font-size: 14px; }
+
+/* Graph result */
+.graph-box {
+  background: #080d18;
+  border: 1px solid #1a3050;
+  border-radius: 8px;
+  padding: 14px;
+}
+.graph-box .node {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  margin: 4px;
+}
+.edge-line {
+  font-size: 10px;
+  color: #5a7a9a;
+  margin: 4px 0 4px 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.edge-type {
+  font-size: 9px;
+  color: #10b981;
+  background: #10b98118;
+  border: 1px solid #10b98140;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* Key insight box */
+.insight {
+  background: #0a1a0a;
+  border: 1px solid #10b98140;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 16px;
+}
+.insight-title { font-size: 10px; color: #10b981; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.insight-row { font-size: 11px; color: #5a7a9a; margin-bottom: 5px; line-height: 1.5; display: flex; gap: 8px; }
+.insight-row strong { color: #c8ddf0; }
+
+/* chunk display */
+.chunk-box {
+  background: #080d18;
+  border: 1px solid #1a3050;
+  border-left: 3px solid #f5a623;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 11px;
+  color: #8aaabb;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.highlight { color: #f5a623; font-weight: 700; }
+.highlight2 { color: #4a9eff; font-weight: 700; }
+.highlight3 { color: #10b981; font-weight: 700; }
+
+/* prompt box */
+.prompt-box {
+  background: #0d1225;
+  border: 1px solid #4a9eff40;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 10px;
+  color: #6a8aaa;
+  line-height: 1.7;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+}
+.prompt-key { color: #4a9eff; }
+.prompt-val { color: #10b981; }
+.prompt-chunk { color: #f5a623; }
+
+.divider { border: none; border-top: 1px solid #1a3050; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<div class="title">How Claude Haiku Extracts Entities & Relationships</div>
+<div class="subtitle">Per-chunk extraction — prompt engineering + structured JSON output</div>
+
+<!-- Step 1: chunk -->
+<div class="section">
+  <div class="sec-label">Step 1 — The input chunk (400 words of PDF text)</div>
+  <div class="chunk-box">
+    "The <span class="highlight">Basel III framework</span> requires <span class="highlight2">Category I banks</span> to maintain a minimum
+    <span class="highlight3">CET1 ratio</span> of 4.5%. The <span class="highlight2">Federal Reserve</span> oversees compliance and
+    may impose additional surcharges on <span class="highlight">G-SIBs</span> (Global Systemically Important Banks) up to 2.5%..."
+  </div>
+</div>
+
+<!-- Step 2: prompt -->
+<div class="section">
+  <div class="sec-label">Step 2 — What we send to Claude Haiku (prompt + chunk)</div>
+  <div class="prompt-box"><span class="prompt-key">SYSTEM:</span> You are an expert at extracting structured knowledge from regulatory text.
+         Return ONLY valid JSON. No explanation. No markdown.
+
+<span class="prompt-key">USER:</span>   Extract entities and relationships from this text.
+
+         Return this exact JSON structure:
+         {
+           <span class="prompt-val">"entities"</span>: [ {"id", "label", "type", "description"} ],
+           <span class="prompt-val">"relationships"</span>: [ {"from", "to", "type", "description"} ]
+         }
+
+         Entity types: Person | Organization | Concept | Rule | Location | Event | Other
+         Relationship types: use CAPS_VERB_PHRASE (e.g. DEFINES, APPLIES_TO, REQUIRES)
+
+         TEXT:
+         <span class="prompt-chunk">"The Basel III framework requires Category I banks to maintain..."</span></div>
+</div>
+
+<!-- Step 3: output -->
+<div class="section">
+  <div class="sec-label">Step 3 — Claude Haiku responds with structured JSON</div>
+  <div class="grid2">
+    <div>
+      <div style="font-size:10px;color:#f43f5e;margin-bottom:6px;letter-spacing:1px">ENTITIES EXTRACTED</div>
+      <div class="entity-card" style="margin-bottom:6px">
+        <div class="eid">id: basel_iii_framework</div>
+        <div class="elabel">Basel III Framework</div>
+        <span class="etype" style="background:#f5a62318;color:#f5a623;border:1px solid #f5a62340">Rule</span>
+        <div class="edesc">International framework setting minimum capital requirements</div>
+      </div>
+      <div class="entity-card" style="margin-bottom:6px">
+        <div class="eid">id: category_i_banks</div>
+        <div class="elabel">Category I Banks</div>
+        <span class="etype" style="background:#4a9eff18;color:#4a9eff;border:1px solid #4a9eff40">Organization</span>
+        <div class="edesc">Largest U.S. BHCs subject to strictest capital standards</div>
+      </div>
+      <div class="entity-card" style="margin-bottom:6px">
+        <div class="eid">id: cet1_ratio</div>
+        <div class="elabel">CET1 Ratio</div>
+        <span class="etype" style="background:#10b98118;color:#10b981;border:1px solid #10b98140">Concept</span>
+        <div class="edesc">Core capital adequacy measure — min 4.5% required</div>
+      </div>
+      <div class="entity-card">
+        <div class="eid">id: federal_reserve</div>
+        <div class="elabel">Federal Reserve</div>
+        <span class="etype" style="background:#4a9eff18;color:#4a9eff;border:1px solid #4a9eff40">Organization</span>
+        <div class="edesc">U.S. central bank overseeing capital compliance</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:10px;color:#10b981;margin-bottom:6px;letter-spacing:1px">RELATIONSHIPS EXTRACTED</div>
+      <div class="rel-card" style="margin-bottom:6px">
+        <span class="rel-from">Basel III</span>
+        <span class="rel-arrow">──</span>
+        <span class="rel-type">APPLIES_TO</span>
+        <span class="rel-arrow">──►</span>
+        <span class="rel-to">Category I Banks</span>
+      </div>
+      <div class="rel-card" style="margin-bottom:6px">
+        <span class="rel-from">Category I Banks</span>
+        <span class="rel-arrow">──</span>
+        <span class="rel-type">MUST_MAINTAIN</span>
+        <span class="rel-arrow">──►</span>
+        <span class="rel-to">CET1 Ratio</span>
+      </div>
+      <div class="rel-card" style="margin-bottom:6px">
+        <span class="rel-from">Federal Reserve</span>
+        <span class="rel-arrow">──</span>
+        <span class="rel-type">OVERSEES</span>
+        <span class="rel-arrow">──►</span>
+        <span class="rel-to">Category I Banks</span>
+      </div>
+      <div class="rel-card">
+        <span class="rel-from">Federal Reserve</span>
+        <span class="rel-arrow">──</span>
+        <span class="rel-type">MAY_IMPOSE</span>
+        <span class="rel-arrow">──►</span>
+        <span class="rel-to">G-SIB Surcharge</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- Step 4: graph -->
+<div class="section">
+  <div class="sec-label">Step 4 — Code parses JSON → adds to NetworkX graph</div>
+  <div class="graph-box">
+    <div style="font-size:10px;color:#5a7a9a;margin-bottom:10px">Resulting graph nodes + edges for this chunk:</div>
+
+    <div>
+      <span class="node" style="background:#f5a62320;color:#f5a623;border:1px solid #f5a62340">⬡ Basel III Framework</span>
+      <span class="node" style="background:#4a9eff20;color:#4a9eff;border:1px solid #4a9eff40">⬡ Category I Banks</span>
+      <span class="node" style="background:#10b98120;color:#10b981;border:1px solid #10b98140">⬡ CET1 Ratio</span>
+      <span class="node" style="background:#4a9eff20;color:#4a9eff;border:1px solid #4a9eff40">⬡ Federal Reserve</span>
+      <span class="node" style="background:#f5a62320;color:#f5a623;border:1px solid #f5a62340">⬡ G-SIB Surcharge</span>
+    </div>
+
+    <div style="margin-top:10px">
+      <div class="edge-line">Basel III Framework <span class="edge-type">APPLIES_TO</span> ──► Category I Banks</div>
+      <div class="edge-line">Category I Banks <span class="edge-type">MUST_MAINTAIN</span> ──► CET1 Ratio</div>
+      <div class="edge-line">Federal Reserve <span class="edge-type">OVERSEES</span> ──► Category I Banks</div>
+      <div class="edge-line">Federal Reserve <span class="edge-type">MAY_IMPOSE</span> ──► G-SIB Surcharge</div>
+    </div>
+
+    <div style="margin-top:10px;font-size:10px;color:#2a4060">
+      Each node also stores: <span style="color:#4a7a9a">chunk_ids=[7]</span> ← links back to this chunk for retrieval
+    </div>
+  </div>
+</div>
+
+<!-- Key insights -->
+<div class="insight">
+  <div class="insight-title">Key things to understand</div>
+  <div class="insight-row"><span>🔁</span><span><strong>Loops over every chunk:</strong> If your PDF has 80 chunks → 80 Claude Haiku API calls during ingestion</span></div>
+  <div class="insight-row"><span>🧠</span><span><strong>Claude doesn't need training on your doc:</strong> It reads the chunk text fresh each time and uses its language understanding to identify entities</span></div>
+  <div class="insight-row"><span>📐</span><span><strong>Prompt is everything:</strong> The JSON schema in the prompt forces structured output — change the schema and you change what gets extracted</span></div>
+  <div class="insight-row"><span>🔗</span><span><strong>chunk_ids is the bridge:</strong> Each node remembers which chunk it came from — this is how vector retrieval and graph lookup connect later</span></div>
+  <div class="insight-row"><span>🔀</span><span><strong>Same entity across chunks:</strong> If "Federal Reserve" appears in chunk 7 and chunk 23, NetworkX merges them (MERGE logic) and stores chunk_ids=[7, 23]</span></div>
+  <div class="insight-row"><span>💰</span><span><strong>Cost:</strong> Claude Haiku is ~$0.25/M input tokens. 80 chunks × 600 tokens = 48K tokens ≈ <strong>$0.012 total</strong></span></div>
+</div>
+
+</body>
+</html>

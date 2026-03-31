@@ -1,0 +1,29 @@
+# KG-RAG · Knowledge Graph RAG
+# Install: pip install -r requirements.txt
+
+# Core LLM
+anthropic>=0.40.0
+
+# PDF parsing
+pypdf>=4.0.0
+
+# Embeddings (local, no API key needed)
+sentence-transformers>=2.7.0
+torch>=2.0.0                    # sentence-transformers dependency
+
+# Graph
+networkx>=3.2
+neo4j>=5.14.0                   # Python driver; Neo4j server is separate
+
+# Graph visualisation inside Streamlit
+pyvis>=0.3.2
+
+# Data
+numpy>=1.26.0
+pandas>=2.1.0
+
+# UI
+streamlit>=1.35.0
+
+# Utilities
+python-dotenv>=1.0.0            # optional: load .env for API keys
